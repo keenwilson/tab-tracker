@@ -1,7 +1,8 @@
 // Use controller to declare all endpoints associated with that controller
 const AuthenticationController = require('./controllers/AuthenticationController')
-
 const AuthenticationControllerPolicy = require('./policies/AuthenticationControllerPolicy')
+const SongsController = require('./controllers/SongsController')
+
 module.exports = (app) => {
   app.post('/register',
     AuthenticationControllerPolicy.register,
@@ -9,4 +10,10 @@ module.exports = (app) => {
   // A login endpoint which calls the AuthenticationController.login method
   app.post('/login',
     AuthenticationController.login)
+
+  app.get('/songs',
+    SongsController.index)
+
+  app.post('/songs',
+    SongsController.post)
 }

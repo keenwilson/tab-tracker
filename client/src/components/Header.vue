@@ -6,12 +6,15 @@
         TabTracker
       </span>
     </v-toolbar-title>
-    <!-- TODO: Implement Me -->
-   <!--  <v-toolbar-items>
-      <v-btn flat dark>
+
+    <v-toolbar-items>
+      <v-btn
+        flat
+        dark
+        @click="navigateTo({name: 'songs'})">
         Browse
       </v-btn>
-    </v-toolbar-items> -->
+    </v-toolbar-items>
 
     <v-spacer></v-spacer>
 
@@ -35,7 +38,8 @@
       <v-btn
         v-if="$store.state.isUserLoggedIn"
         flat
-        dark>
+        dark
+        @click="logout">
         Log Out
       </v-btn>
     </v-toolbar-items>
@@ -47,6 +51,14 @@ export default {
   methods: {
     navigateTo (route) {
       this.$router.push(route)
+    },
+    logout () {
+      this.$store.dispatch('setToken', null)
+      this.$store.dispatch('setUser', null)
+      // Redirect to homepage
+      this.$router.push({
+        name: 'root'
+      })
     }
   }
 }
