@@ -12,7 +12,7 @@
           v-model="password"
         ></v-text-field>
         <br>
-        <div class="error" v-html="error" />
+        <div class="danger-alert" v-html="error" />
         <v-btn class="cyan" @click="login" dark>Login</v-btn>
       </panel>
     </v-flex>
@@ -21,7 +21,6 @@
 
 <script>
 import AuthenticationService from '@/services/AuthenticationService'
-import Panel from '@/components/Panel'
 
 export default {
   data () {
@@ -43,19 +42,16 @@ export default {
         // setToken and setUser based on whatever return from the login endpoint
         this.$store.dispatch('setToken', response.data.token)
         this.$store.dispatch('setUser', response.data.user)
+        this.$router.push({
+          name: 'songs'
+        })
       } catch (error) {
         this.error = error.response.data.error
       }
     }
-  },
-  components: {
-    Panel
   }
 }
 </script>
 
 <style scoped>
-.error {
-  color: red;
-}
 </style>

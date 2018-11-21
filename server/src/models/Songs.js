@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     tab: DataTypes.TEXT
   })
 
-  Song.associate = function (models) {
-  }
+
   return Song
 }

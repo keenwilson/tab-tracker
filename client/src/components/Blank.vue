@@ -1,6 +1,6 @@
 <template>
-  <div>
-  </div>
+  <panel title="Search">
+  </panel>
 </template>
 
 <script>
