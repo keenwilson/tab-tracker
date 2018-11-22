@@ -2,6 +2,7 @@
 const AuthenticationController = require('./controllers/AuthenticationController')
 const AuthenticationControllerPolicy = require('./policies/AuthenticationControllerPolicy')
 const SongsController = require('./controllers/SongsController')
+const BookmarksController = require('./controllers/BookmarksController')
 
 module.exports = (app) => {
   app.post('/register',
@@ -22,4 +23,13 @@ module.exports = (app) => {
 
   app.post('/songs',
     SongsController.post)
+
+  app.get('/bookmarks',
+    BookmarksController.index)
+
+  app.post('/bookmarks',
+    BookmarksController.post)
+
+  app.delete('/bookmarks/:bookmarkId',
+    BookmarksController.delete)
 }

@@ -30,8 +30,16 @@ fs
     console.log(model.name)
     db[model.name] = model
   })
+  
+Object.keys(db).forEach(function (modelName) {
+  // For each model, check if it has 'associate' method
+  if ('associate' in db[modelName]) {
+    // If it has, call db[modelName].associate() and pass the db object
+    db[modelName].associate(db)
+  }
+})
 
-  db.sequelize = sequelize
-  db.Sequelize = Sequelize
+db.sequelize = sequelize
+db.Sequelize = Sequelize
 
 module.exports = db
