@@ -66,7 +66,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'isUserLoggedIn'
+      'isUserLoggedIn',
+      'user'
     ])
   },
   watch: {
@@ -76,10 +77,13 @@ export default {
       }
 
       try {
-        this.bookmark = (await BookmarksService.index({
+        const bookmarks = (await BookmarksService.index({
           songId: this.song.id,
-          userId: this.$store.state.user.id
+          userId: this.user.id
         })).data
+        if (bookmarks.length) {
+          this.bookmark = bookmarks[0]
+        }
       } catch (err) {
         console.log(err)
       }
@@ -100,7 +104,7 @@ export default {
     },
     async unsetAsBookmark () {
       try {
-        await BookmarksService.delete(this.bookmark.id)
+        await BookmarksService.delete(this.bookmark.bokmarkId)
         this.bookmark = null
       } catch (err) {
         console.log(err)

@@ -25,6 +25,8 @@ import Tab from './Tab'
 import SongMetadata from './SongMetadata'
 import YouTube from './YouTube'
 import SongsService from '@/services/SongsService'
+import SongHistoryService from '@/services/SongHistoryService'
+import {mapState} from 'vuex'
 
 export default {
   data () {
@@ -32,11 +34,25 @@ export default {
       song: {}
     }
   },
+  computed: {
+    ...mapState([
+      'isUserLoggedIn',
+      'user',
+      'route'
+    ])
+  },
   // index.js only concerns about fetching the song
   async mounted () {
     // Grab the state of Vuex store and get the songId from the URL
-    const songId = this.$store.state.route.params.songId
+    const songId = this.route.params.songId
     this.song = (await SongsService.show(songId)).data
+
+    if (this.isUserLoggedIn) {
+      SongHistoryService.post({
+        songId: this.song.id,
+        userId: this.user.id
+      })
+    }
   },
   components: {
     SongMetadata,

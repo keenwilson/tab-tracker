@@ -1,35 +1,49 @@
 const {
-  Bookmark
+  Bookmark,
+  Song
 } = require('../models')
+const _ = require('lodash')
 
 module.exports = {
-  // Allow user to search a particular bookmark based on the song id
-  // GET http://localhost:8081/bookmarks?songId=1
   async index (req, res) {
     try {
-      // Grab songId from the query string
+      // const userId = req.user.id
+      // const {songId} = req.body
       const {songId, userId} = req.query
-      console.log('Grab song id', songId)
-      const bookmark = await Bookmark.findOne({
-        where: {
-          SongId: songId,
-          UserId: userId
-        }
+      console.log(req.body)
+      console.log(req.body)
+      console.log(req.body)
+      const where = {
+        UserId: userId
+      }
+      if (songId) {
+        where.SongId = songId
+      }
+      const bookmarks = await Bookmark.findAll({
+        where: where,
+        include: [
+          {
+            model: Song
+          }
+        ]
       })
-      res.send(bookmark)
+        .map(bookmark => bookmark.toJSON())
+        .map(bookmark => _.extend(
+          {},
+          bookmark.Song,
+          bookmark))
+      res.send(bookmarks)
     } catch (err) {
         res.status(500).send({
-          error: 'An error has occured trying to fetch a bookmark for a particular song'
+          error: 'An error has occured trying to fetch the bookmark for a particular song'
         })
     }
   },
   async post (req, res) {
     try {
-      // Grab bookmark from the request
+      // const userId = req.user.id
+      // const {songId} = req.body
       const {songId, userId} = req.body
-      console.log(req.body)
-      console.log(`req.body.songId: ${req.body.songId}, req.body.userId: ${req.body.userId}`)
-      console.log(`Post: find existing bookmark of songId: ${songId} and userId: ${userId}`)
       // Check if it is already in the database
       const bookmark = await Bookmark.findOne({
         where: {
