@@ -1,7 +1,6 @@
 const {
   History,
-  Song,
-  User
+  Song
 } = require('../models')
 
 // Require lodash for mapping
@@ -10,7 +9,7 @@ const _ = require('lodash')
 module.exports = {
   async index (req, res) {
     try {
-      const {userId} = req.query
+      const userId = req.user.id
       const histories = await History.findAll({
         where: {
           UserId: userId
@@ -19,6 +18,8 @@ module.exports = {
           {
             model: Song
           }
+        ],order: [
+          ['createdAt', 'DESC']
         ]
       })
         .map(history => history.toJSON())
@@ -26,7 +27,7 @@ module.exports = {
           {},
           history.Song,
           history))
-      res.send(_.uniq(histories))
+      res.send(_.uniqBy(histories, history => history.SongId))
     } catch (err) {
         res.status(500).send({
           error: 'An error has occured trying to fetch the history'
@@ -35,15 +36,12 @@ module.exports = {
   },
   async post (req, res) {
     try {
-      // const userId = req.user.id
-      // const {songId} = req.body
-      const {songId, userId} = req.body
+      const userId = req.user.id
+      const {songId} = req.body
       // Check if it is already in the database
       const history = await History.create({
-        where: {
-          SongId: songId,
-          UserId: userId
-        }
+        SongId: songId,
+        UserId: userId
       })
       res.send(history)
     } catch (err) {

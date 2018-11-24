@@ -7,12 +7,8 @@ const _ = require('lodash')
 module.exports = {
   async index (req, res) {
     try {
-      // const userId = req.user.id
-      // const {songId} = req.body
-      const {songId, userId} = req.query
-      console.log(req.body)
-      console.log(req.body)
-      console.log(req.body)
+      const userId = req.user.id
+      const {songId} = req.query
       const where = {
         UserId: userId
       }
@@ -41,9 +37,9 @@ module.exports = {
   },
   async post (req, res) {
     try {
-      // const userId = req.user.id
-      // const {songId} = req.body
-      const {songId, userId} = req.body
+      // req.user.id comes in from a jwt token that is proved to be valid
+      const userId = req.user.id
+      const {songId} = req.body
       // Check if it is already in the database
       const bookmark = await Bookmark.findOne({
         where: {
@@ -72,10 +68,20 @@ module.exports = {
   },
   async delete (req, res) {
     try {
+      const userId = req.user.id
       // Find the bookmark by Id, destroy it
       const {bookmarkId} = req.params
-      console.log('Delete: Grab bookmark id', bookmarkId)
-      const bookmark = await Bookmark.findById(bookmarkId)
+      const bookmark = await Bookmark.findOne({
+        where: {
+          id: bookmarkId,
+          UserId: userId
+        }
+      })
+      if (!bookmark) {
+        return res.status(403).send({
+          error: 'you do not have access to this bookmark'
+        })
+      }
       await bookmark.destroy()
       // and send the bookmark that was destroyed back to the user
       // if it is successful

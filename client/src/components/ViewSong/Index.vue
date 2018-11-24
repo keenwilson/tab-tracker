@@ -49,8 +49,7 @@ export default {
 
     if (this.isUserLoggedIn) {
       SongHistoryService.post({
-        songId: this.song.id,
-        userId: this.user.id
+        songId: this.song.id
       })
     }
   },

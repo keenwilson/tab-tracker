@@ -78,8 +78,7 @@ export default {
 
       try {
         const bookmarks = (await BookmarksService.index({
-          songId: this.song.id,
-          userId: this.user.id
+          songId: this.song.id
         })).data
         if (bookmarks.length) {
           this.bookmark = bookmarks[0]
@@ -95,8 +94,7 @@ export default {
       try {
         // Set this.bookmark to whatever the back end returns
         this.bookmark = (await BookmarksService.post({
-          songId: this.song.id,
-          userId: this.$store.state.user.id
+          songId: this.song.id
         })).data
       } catch (err) {
         console.log(err)
@@ -104,7 +102,7 @@ export default {
     },
     async unsetAsBookmark () {
       try {
-        await BookmarksService.delete(this.bookmark.bokmarkId)
+        await BookmarksService.delete(this.bookmark.bookmarkId)
         this.bookmark = null
       } catch (err) {
         console.log(err)
